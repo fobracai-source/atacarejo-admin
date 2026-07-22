@@ -1,0 +1,6 @@
+* { box-sizing: border-box; }
+body { margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; background: #fafafa; }
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; }
+input, select, textarea { font-family: inherit; font-size: inherit; }
+table { width: 100%; border-collapse: collapse; }
