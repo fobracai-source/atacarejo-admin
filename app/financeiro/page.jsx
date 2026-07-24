@@ -595,7 +595,10 @@ function FinanceiroContent() {
     let cmv = 0;
     const orderIds = [...new Set(receitaVendaTxs.map((t) => t.order_id).filter(Boolean))];
 
-    if (orderIds.length > 0) {
+    const { data: modoComissaoData } = await supabase.from("atacarejo_module_settings").select("enabled").eq("id", "modo_comissao").maybeSingle();
+    const modoComissaoAtivo = modoComissaoData?.enabled || false;
+
+    if (!modoComissaoAtivo && orderIds.length > 0) {
       const { data: items } = await supabase
         .from("atacarejo_order_items")
         .select("product_id, quantity, order_id")
@@ -618,7 +621,7 @@ function FinanceiroContent() {
 
     setDreData({
       start, end, receitaVendas, cmv, lucroBruto, outrasReceitas,
-      totalDespesas, despesasPorCategoria, resultado,
+      totalDespesas, despesasPorCategoria, resultado, modoComissaoAtivo,
       margemBruta: receitaVendas > 0 ? (lucroBruto / receitaVendas) * 100 : null,
       margemLiquida: receitaVendas > 0 ? (resultado / receitaVendas) * 100 : null,
       vendasCount: receitaVendaTxs.length,
@@ -655,7 +658,11 @@ function FinanceiroContent() {
 
     let cmv = 0;
     const orderIds = [...new Set(receitaVendaTxs.map((t) => t.order_id).filter(Boolean))];
-    if (orderIds.length > 0) {
+
+    const { data: modoComissaoData } = await supabase.from("atacarejo_module_settings").select("enabled").eq("id", "modo_comissao").maybeSingle();
+    const modoComissaoAtivo = modoComissaoData?.enabled || false;
+
+    if (!modoComissaoAtivo && orderIds.length > 0) {
       const { data: items } = await supabase.from("atacarejo_order_items").select("product_id, quantity, order_id").in("order_id", orderIds);
       const productIds = [...new Set((items || []).map((i) => i.product_id).filter(Boolean))];
       const { data: atacarejo_products } = await supabase.from("atacarejo_products").select("id, cost_price").in("id", productIds);
@@ -689,7 +696,7 @@ function FinanceiroContent() {
     setPeData({
       start, end, receitaTotal, cmv, despesasFixas, despesasVariaveis,
       custosVariaveisTotais, custosFixosTotais, margemContribuicao, margemContribuicaoPct,
-      variableCostRate, peContabil, peEconomico, lucroDesejadoNum, ticketMedio,
+      variableCostRate, peContabil, peEconomico, lucroDesejadoNum, ticketMedio, modoComissaoAtivo,
       vendasCount: receitaVendaTxs.length,
     });
     setPeLoading(false);
@@ -1469,14 +1476,19 @@ function FinanceiroContent() {
               <p style={styles.empty}>Calculando…</p>
             ) : (
               <div style={styles.dreCard}>
+                {dreData.modoComissaoAtivo && (
+                  <p style={{ ...styles.dreNote, background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 8, padding: "8px 10px", color: "#1d4ed8", marginBottom: 10 }}>
+                    Modo Comissão ativo — a Receita de Vendas abaixo já é a comissão líquida (pedido − custo dos produtos), por isso o CMV não é descontado de novo.
+                  </p>
+                )}
                 <div style={styles.dreRow}>
-                  <span style={styles.dreLabel}>Receita de Vendas</span>
+                  <span style={styles.dreLabel}>Receita de Vendas{dreData.modoComissaoAtivo ? " (comissão)" : ""}</span>
                   <span style={styles.dreValue}>{fmt(dreData.receitaVendas)}</span>
                 </div>
                 <p style={styles.dreNote}>{dreData.vendasCount} venda(s) considerada(s) no período</p>
 
                 <div style={styles.dreRow}>
-                  <span style={styles.dreLabelMinus}>(-) Custo dos Produtos Vendidos (CMV)</span>
+                  <span style={styles.dreLabelMinus}>(-) Custo dos Produtos Vendidos (CMV){dreData.modoComissaoAtivo ? " — já embutido acima" : ""}</span>
                   <span style={styles.dreValueMinus}>{fmt(dreData.cmv)}</span>
                 </div>
 
@@ -1568,6 +1580,13 @@ function FinanceiroContent() {
               </p>
             ) : (
               <>
+                {peData.modoComissaoAtivo && (
+                  <p style={{ ...styles.dreExplainer, background: "#eff6ff", borderColor: "#bfdbfe", color: "#1d4ed8" }}>
+                    <Info size={13} style={{ flexShrink: 0, marginTop: 1 }} />
+                    Modo Comissão ativo — a Receita já é a comissão líquida, então o CMV não entra
+                    de novo nos custos variáveis (só as despesas variáveis mesmo).
+                  </p>
+                )}
                 <div style={styles.statsRow}>
                   <div style={styles.statCard}>
                     <div style={{ ...styles.statIcon, background: "#fef2f2" }}><TrendingDown size={16} color="#dc2626" /></div>
@@ -1575,7 +1594,7 @@ function FinanceiroContent() {
                   </div>
                   <div style={styles.statCard}>
                     <div style={{ ...styles.statIcon, background: "#fef3c7" }}><TrendingDown size={16} color="#d97706" /></div>
-                    <div><div style={styles.statValue}>{fmt(peData.custosVariaveisTotais)}</div><div style={styles.statLabel}>Custos variáveis (CMV + despesas)</div></div>
+                    <div><div style={styles.statValue}>{fmt(peData.custosVariaveisTotais)}</div><div style={styles.statLabel}>Custos variáveis{peData.modoComissaoAtivo ? " (despesas, sem CMV)" : " (CMV + despesas)"}</div></div>
                   </div>
                   <div style={styles.statCard}>
                     <div style={{ ...styles.statIcon, background: "#f0fdf4" }}><TrendingUp size={16} color="#16a34a" /></div>
