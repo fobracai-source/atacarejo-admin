@@ -22,6 +22,10 @@ const MODULE_LABELS = {
     label: "Perguntar \"Como vai pagar?\" na entrega",
     description: "Quando ativo, o checkout pergunta a forma exata de pagamento (dinheiro, cartão, Pix...) para quem escolher \"Pagar na Entrega\".",
   },
+  modo_comissao: {
+    label: "Modo Comissão",
+    description: "Quando ativo, a Receita de Venda reconhecida no Financeiro passa a ser só a comissão (valor do pedido − custo de compra dos produtos), em vez do valor cheio do pedido. Isso afeta o Financeiro, o DRE, o Ponto de Equilíbrio, a Folha de Pagamento, o Banco Alegre e o Governo.",
+  },
 };
 
 function ConfiguracoesContent() {
@@ -117,6 +121,13 @@ function ConfiguracoesContent() {
       const confirmou = confirm(
         "Ao ativar Compras e Suprimentos, o estoque e o custo dos produtos passam a ser controlados só por Notas de Compra. Os campos ficam bloqueados para edição direta no cadastro do produto. Deseja continuar?"
       );
+      if (!confirmou) return;
+    }
+    if (id === "modo_comissao") {
+      const mensagem = ativando
+        ? "Você tem certeza que deseja ativar o MODO COMISSÃO?\n\nA partir de agora, a Receita de Venda reconhecida no Financeiro será só (valor do pedido − custo de compra dos produtos), e não mais o valor cheio do pedido.\n\nIsso muda o Financeiro, o DRE, o Ponto de Equilíbrio, a Folha de Pagamento (para quem ganha % do faturamento), o Banco Alegre e o Governo (imposto sobre vendas). Pedidos já entregues antes de ativar não são recalculados automaticamente."
+        : "Tem certeza que deseja DESATIVAR o Modo Comissão? O Financeiro volta a reconhecer o valor cheio do pedido como receita.";
+      const confirmou = confirm(mensagem);
       if (!confirmou) return;
     }
     setModuleSettings((prev) => prev.map((m) => (m.id === id ? { ...m, enabled: ativando } : m)));
