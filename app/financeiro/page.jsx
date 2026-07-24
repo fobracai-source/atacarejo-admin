@@ -1252,7 +1252,7 @@ function FinanceiroContent() {
                       <th style={styles.th}>Data</th>
                       <th style={styles.th}>Cliente</th>
                       <th style={styles.th}>Telefone</th>
-                      <th style={styles.th}>Total do pedido</th>
+                      <th style={styles.th}>Total do pedido (comissão)</th>
                       <th style={styles.th}>Imposto</th>
                       <th style={styles.th}>Status</th>
                     </tr>
@@ -1271,7 +1271,7 @@ function FinanceiroContent() {
                         <td style={{ ...styles.td, cursor: "pointer" }} onClick={() => loadOrderDetailGoverno(p.order_id)}>{fmtDateGoverno(p.created_at)}</td>
                         <td style={{ ...styles.td, cursor: "pointer" }} onClick={() => loadOrderDetailGoverno(p.order_id)}>{p.cliente_nome}</td>
                         <td style={{ ...styles.td, cursor: "pointer" }} onClick={() => loadOrderDetailGoverno(p.order_id)}>{p.cliente_telefone || "—"}</td>
-                        <td style={{ ...styles.td, cursor: "pointer" }} onClick={() => loadOrderDetailGoverno(p.order_id)}>{fmtMoneyGoverno(p.order_total)}</td>
+                        <td style={{ ...styles.td, cursor: "pointer" }} onClick={() => loadOrderDetailGoverno(p.order_id)}>{fmtMoneyGoverno(p.valor_comissao)}</td>
                         <td style={{ ...styles.td, cursor: "pointer", fontWeight: 700 }} onClick={() => loadOrderDetailGoverno(p.order_id)}>{fmtMoneyGoverno(p.tax_amount)}</td>
                         <td style={styles.td}>
                           <span style={{ ...styles.badge, ...(p.tax_settled ? styles.badgeDone : styles.badgePending) }}>
