@@ -358,7 +358,7 @@ function FinanceiroContent() {
   }
 
   const pedidosImpostoFiltrados = pedidosImposto
-    .filter((p) => !filtroPedidoNumero || String(p.order_number).includes(filtroPedidoNumero))
+    .filter((p) => !filtroPedidoNumero || String(p.order_number).includes(filtroPedidoNumero.replace(/^ata/i, "")))
     .filter((p) => !filtroCliente || p.cliente_nome.toLowerCase().includes(filtroCliente.toLowerCase()))
     .filter((p) => !filtroTelefone || (p.cliente_telefone || "").includes(filtroTelefone))
     .filter((p) => {
@@ -1267,7 +1267,7 @@ function FinanceiroContent() {
                             </button>
                           )}
                         </td>
-                        <td style={{ ...styles.td, cursor: "pointer" }} onClick={() => loadOrderDetailGoverno(p.order_id)}>#{p.order_number}</td>
+                        <td style={{ ...styles.td, cursor: "pointer" }} onClick={() => loadOrderDetailGoverno(p.order_id)}>#ATA{p.order_number}</td>
                         <td style={{ ...styles.td, cursor: "pointer" }} onClick={() => loadOrderDetailGoverno(p.order_id)}>{fmtDateGoverno(p.created_at)}</td>
                         <td style={{ ...styles.td, cursor: "pointer" }} onClick={() => loadOrderDetailGoverno(p.order_id)}>{p.cliente_nome}</td>
                         <td style={{ ...styles.td, cursor: "pointer" }} onClick={() => loadOrderDetailGoverno(p.order_id)}>{p.cliente_telefone || "—"}</td>
@@ -1289,7 +1289,7 @@ function FinanceiroContent() {
               <div style={styles.modalOverlay} onClick={() => setDetailOrderGoverno(null)}>
                 <div style={styles.modalCard} onClick={(e) => e.stopPropagation()}>
                   <div style={styles.modalHeader}>
-                    <h2 style={styles.modalTitle}>Pedido #{detailOrderGoverno.order_number}</h2>
+                    <h2 style={styles.modalTitle}>Pedido #ATA{detailOrderGoverno.order_number}</h2>
                     <button onClick={() => setDetailOrderGoverno(null)} style={styles.modalClose}><X size={18} /></button>
                   </div>
                   <div style={styles.modalBody}>

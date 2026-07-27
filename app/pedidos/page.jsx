@@ -83,7 +83,7 @@ function PedidosContent() {
     const rows = [
       ["Nº Pedido", "Data/Hora", "Cliente", "Status de Entrega", "Forma de Pagamento", "Subtotal", "Frete", "Total", "Observação"],
       ...filteredOrders.map((o) => [
-        o.order_number,
+        `ATA${o.order_number}`,
         new Date(o.created_at).toLocaleString("pt-BR"),
         o.atacarejo_customers?.name || "—",
         DELIVERY_STATUS_LABELS[getDeliveryStatus(o)] || getDeliveryStatus(o),
@@ -182,7 +182,7 @@ function PedidosContent() {
                   const dataEntrega = getDataEntrega(o);
                   return (
                     <tr key={o.id} style={{ ...styles.tr, cursor: "pointer" }} onClick={() => setDetailOrder(o)}>
-                      <td style={styles.td}>#{o.order_number}</td>
+                      <td style={styles.td}>#ATA{o.order_number}</td>
                       <td style={styles.td}>{new Date(o.created_at).toLocaleString("pt-BR")}</td>
                       <td style={styles.td}>{o.atacarejo_customers?.name || "—"}</td>
                       <td style={styles.td}>{o.atacarejo_order_items?.length || 0} item(ns)</td>
@@ -208,7 +208,7 @@ function PedidosContent() {
         <div style={styles.modalOverlay} onClick={() => setDetailOrder(null)}>
           <div style={styles.modalCard} onClick={(e) => e.stopPropagation()}>
             <div style={styles.modalHeader}>
-              <h2 style={styles.modalTitle}>Pedido #{detailOrder.order_number}</h2>
+              <h2 style={styles.modalTitle}>Pedido #ATA{detailOrder.order_number}</h2>
               <button onClick={() => setDetailOrder(null)} style={styles.modalClose}><X size={18} /></button>
             </div>
 

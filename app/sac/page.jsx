@@ -279,7 +279,7 @@ function SacContent() {
                     <div style={{ display: "flex", flexDirection: "column", gap: 4, marginTop: 4 }}>
                       {pedidosClienteSelecionado.map((p) => (
                         <div key={p.order_number} style={styles.pedidoPreviewRow}>
-                          <span>#{p.order_number} · {new Date(p.created_at).toLocaleDateString("pt-BR")} · {(p.atacarejo_order_items || []).length} item(ns)</span>
+                          <span>#ATA{p.order_number} · {new Date(p.created_at).toLocaleDateString("pt-BR")} · {(p.atacarejo_order_items || []).length} item(ns)</span>
                           <span style={{ fontWeight: 700 }}>{fmtMoney(p.total)}</span>
                         </div>
                       ))}
@@ -345,7 +345,7 @@ function SacContent() {
                       <div style={styles.metaRow}>
                         <span>{t.customer_name}</span>
                         {t.customer_phone && <span style={styles.metaItem}><Phone size={11} /> {t.customer_phone}</span>}
-                        {t.atacarejo_orders?.order_number && <span style={styles.metaItem}><ShoppingBag size={11} /> Pedido #{t.atacarejo_orders.order_number}</span>}
+                        {t.atacarejo_orders?.order_number && <span style={styles.metaItem}><ShoppingBag size={11} /> Pedido #ATA{t.atacarejo_orders.order_number}</span>}
                         <span style={styles.metaDate}>{new Date(t.created_at).toLocaleDateString("pt-BR")}</span>
                       </div>
                     </div>

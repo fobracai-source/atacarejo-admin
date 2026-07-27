@@ -315,7 +315,7 @@ function CustomerDetailContent() {
               atacarejo_orders.map((o) => (
                 <div key={o.id}>
                   <button onClick={() => setExpandedOrder(expandedOrder === o.id ? null : o.id)} style={styles.orderRowButton}>
-                    <span>#{o.order_number}</span>
+                    <span>#ATA{o.order_number}</span>
                     <span>{fmtDate(o.created_at)}</span>
                     <span>{o.status}</span>
                     <span style={{ fontWeight: 700 }}>{fmtMoney(o.total)}</span>
